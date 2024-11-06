@@ -1,5 +1,7 @@
 package opgave01.application.model;
 
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 
 public class Company {
@@ -8,6 +10,7 @@ public class Company {
 
     // link to Employee class (--> 0..*)
     private final ArrayList<Employee> employees = new ArrayList<>();
+    private final ArrayList<Customer> customers = new ArrayList<>();
 
     /**
      *
@@ -90,5 +93,35 @@ public class Company {
         return total;
     }
 
+    //---------------------------------------------------------------
+
+    public ArrayList<Customer> getCustomers() {
+        return new ArrayList<>(customers);
+    }
+
+    public void addCustomer(Customer customer) {
+        if (!customers.contains(customer)) {
+            customers.add(customer);
+        }
+    }
+
+    public void addCustomers(ObservableList<Customer> customers) {
+        for (Customer customer : customers) {
+            if (!this.customers.contains(customer)) {
+                this.customers.add(customer);
+            }
+        }
+    }
+
+
+    public void removeCustomer(Customer customer) {
+        if (customers.contains(customer)) {
+            customers.remove(customer);
+        }
+    }
+
+    public boolean hasCustomers() {
+        return !customers.isEmpty();
+    }
 
 }

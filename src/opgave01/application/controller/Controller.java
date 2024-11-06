@@ -2,6 +2,7 @@ package opgave01.application.controller;
 
 
 import opgave01.application.model.Company;
+import opgave01.application.model.Customer;
 import opgave01.application.model.Employee;
 import opgave01.storage.Storage;
 
@@ -11,7 +12,8 @@ public class Controller {
     /**
      * Creates a new Company.<br />
      * Requires: hours >= 0.
-     * @param name name of the company
+     *
+     * @param name  name of the company
      * @param hours number of weekly work hours
      */
     public static Company createCompany(String name, int hours) {
@@ -23,10 +25,11 @@ public class Controller {
     /**
      * Deletes the company.<br />
      * Requires: The company has no employees.
+     *
      * @param company The company to delete.
      */
     public static void deleteCompany(Company company) {
-        if (company.hasEmployees()) {
+        if (company.hasEmployees() || company.hasCustomers()) {
             return;
         }
         Storage.removeCompany(company);
@@ -70,6 +73,13 @@ public class Controller {
         return employee;
     }
 
+    public static Employee createEmployee(String name, int wage, Company company, int employmentYear) {
+        Employee employee = createEmployee(name, wage);
+        company.addEmployee(employee);
+        employee.setEmploymentYear(employmentYear);
+        return employee;
+    }
+
     /**
      * Deletes the employee.
      */
@@ -90,6 +100,12 @@ public class Controller {
         employee.setWage(wage);
     }
 
+    public static void updateEmployee(Employee employee, String name, int wage, int employmentYear) {
+        employee.setName(name);
+        employee.setWage(wage);
+        employee.setEmploymentYear(employmentYear);
+    }
+
     /**
      * Adds the employee to the company. Removes the employee from the old company if present.
      */
@@ -99,7 +115,8 @@ public class Controller {
 
     /**
      * Removes the employee from the old company if not null.
-     * @param company The old company. Can be null.
+     *
+     * @param company  The old company. Can be null.
      * @param employee The employee to remove.
      */
     public static void removeEmployeeFromCompany(Employee employee, Company company) {
@@ -117,7 +134,22 @@ public class Controller {
 
     // -------------------------------------------------------------------------
 
+    public static Customer createCustomer(String name) {
+        Customer customer = new Customer(name);
+        Storage.addCustomer(customer);
+        return customer;
+    }
 
+    public static void addCustomerToCompany(Customer customer, Company company) {
+        company.addCustomer(customer);
+    }
 
+    public static void removeCustomerFromCompany(Customer customer, Company company) {
+        company.removeCustomer(customer);
+    }
+
+    public static ArrayList<Customer> getCustomers() {
+        return Storage.getCustomers();
+    }
 }
 

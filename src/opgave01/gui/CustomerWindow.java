@@ -11,22 +11,21 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import opgave01.application.controller.Controller;
 import opgave01.application.model.Company;
+import opgave01.application.model.Customer;
 import opgave01.application.model.Employee;
 
-public class EmployeeWindow extends Stage {
-    private Employee employee;
+public class CustomerWindow extends Stage {
+    private Customer customer;
     private TextField nameTextField;
-    private TextField wageTextField;
-    private TextField employmentYearTextField;
     private CheckBox addCompanyCheckBox;
     private ComboBox<Company> selectCompanyComboBox;
     private Label errorLabel;
 
-    public EmployeeWindow(String title, Employee employee) {
+    public CustomerWindow(String title, Customer customer) {
         initStyle(StageStyle.UTILITY);
         initModality(Modality.APPLICATION_MODAL);
         setResizable(false);
-        this.employee = employee;
+        this.customer = customer;
         setTitle(title);
         GridPane pane = new GridPane();
         initContent(pane);
@@ -34,7 +33,7 @@ public class EmployeeWindow extends Stage {
         setScene(scene);
     }
 
-    public EmployeeWindow(String title) {
+    public CustomerWindow(String title) {
         this(title, null);
     }
 
@@ -48,51 +47,34 @@ public class EmployeeWindow extends Stage {
         nameTextField = new TextField();
         pane.add(nameTextField, 0, 1);
         nameTextField.setPrefWidth(200);
-        Label lblHours = new Label("Hourly Wage");
-        pane.add(lblHours, 0, 2);
-        wageTextField = new TextField();
-        pane.add(wageTextField, 0, 3);
-        Label lblEmploymentYear = new Label("EmploymentYear");
-        pane.add(lblEmploymentYear,0,4);
-        employmentYearTextField = new TextField();
-        pane.add(employmentYearTextField,0,5);
         addCompanyCheckBox = new CheckBox("Company");
-        pane.add(addCompanyCheckBox, 0, 6);
+        pane.add(addCompanyCheckBox, 0, 2);
         ChangeListener<Boolean> listener = (ov, oldValue, newValue) -> selectedCompanyChanged(newValue);
         addCompanyCheckBox.selectedProperty().addListener(listener);
         selectCompanyComboBox = new ComboBox<>();
-        pane.add(selectCompanyComboBox, 0, 7);
+        pane.add(selectCompanyComboBox, 0, 3);
         selectCompanyComboBox.getItems().addAll(Controller.getCompanies());
         selectCompanyComboBox.setDisable(true);
         Button btnCancel = new Button("Cancel");
-        pane.add(btnCancel, 0, 8);
+        pane.add(btnCancel, 0, 4);
         GridPane.setHalignment(btnCancel, HPos.LEFT);
         btnCancel.setOnAction(event -> cancelAction());
         Button btnOK = new Button("OK");
-        pane.add(btnOK, 0, 8);
+        pane.add(btnOK, 0, 4);
         GridPane.setHalignment(btnOK, HPos.RIGHT);
         btnOK.setOnAction(event -> okAction());
         errorLabel = new Label();
-        pane.add(errorLabel, 0, 9);
+        pane.add(errorLabel, 0, 5);
         errorLabel.setStyle("-fx-text-fill: red");
         initControls();
     }
 
     private void initControls() {
-        if (employee != null) {
-            nameTextField.setText(employee.getName());
-            wageTextField.setText("" + employee.getWage());
-            employmentYearTextField.setText("" + employee.getEmploymentYear());
-            if (employee.getCompany() != null) {
-                addCompanyCheckBox.setSelected(true);
-                selectCompanyComboBox.getSelectionModel().select(employee.getCompany());
-            } else {
-                selectCompanyComboBox.getSelectionModel().select(0);
-            }
+        if (customer != null) {
+            nameTextField.setText(customer.getName());
+
         } else {
             nameTextField.clear();
-            wageTextField.clear();
-            employmentYearTextField.clear();
             selectCompanyComboBox.getSelectionModel().select(0);
         }
     }
@@ -107,49 +89,20 @@ public class EmployeeWindow extends Stage {
             errorLabel.setText("Name is empty");
             return;
         }
-        int wage = -1;
-        try {
-            wage = Integer.parseInt(wageTextField.getText().trim());
-        } catch (NumberFormatException ex) {
-            errorLabel.setText("Enter a valid number of hours");
-            return;
-        }
-        if (wage < 0) {
-            errorLabel.setText("Wage is not a positive number");
-            return;
-        }
 
-        int employmentYear = -1;
-        try {
-            employmentYear = Integer.parseInt(employmentYearTextField.getText().trim());
-        } catch (NumberFormatException ex) {
-            errorLabel.setText("Please enter employment year");
-            return;
-        }
-        if (employmentYear < 0) {
-            errorLabel.setText("Employment year invalid");
-            return;
-        }
         boolean companyIsSelected = addCompanyCheckBox.isSelected();
         Company newCompany = selectCompanyComboBox.getSelectionModel().getSelectedItem();
 
         // Call application.controller methods
-        if (employee != null) {
-            if (employmentYear > 0) {
-                Controller.updateEmployee(employee, name, wage, employmentYear);
-            } else {
-                Controller.updateEmployee(employee, name, wage);
-            }
+        if (customer != null) {
             if (companyIsSelected) {
-                Controller.addEmployeeToCompany(employee, newCompany);
-            } else {
-                Controller.removeEmployeeFromCompany(employee, employee.getCompany());
+                Controller.addCustomerToCompany(customer, newCompany);
             }
         } else {
             if (companyIsSelected) {
-                Controller.createEmployee(name, wage, newCompany);
+                Controller.addCustomerToCompany(Controller.createCustomer(name),newCompany);
             } else {
-                Controller.createEmployee(name, wage);
+                Controller.createCustomer(name);
             }
 
         }

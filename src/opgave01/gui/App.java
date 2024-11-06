@@ -9,6 +9,7 @@ public class App {
         initStorage();
         Application.launch(StartWindow.class);
     }
+
     /**
      * Initializes the storage with some objects.
      */
@@ -23,5 +24,8 @@ public class App {
         Controller.createEmployee("George Down", 150, amd);
 
         Controller.createEmployee("Rita Uphill", 300);
+
+        Controller.addCustomerToCompany(Controller.createCustomer("Anton Ramus"), ibm);
+        Controller.addCustomerToCompany(Controller.createCustomer("Hans Hansen"), amd);
     }
 }

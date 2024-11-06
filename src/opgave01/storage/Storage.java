@@ -1,6 +1,7 @@
 package opgave01.storage;
 
 import opgave01.application.model.Company;
+import opgave01.application.model.Customer;
 import opgave01.application.model.Employee;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 public class Storage {
     private static ArrayList<Company> companies = new ArrayList<>();
     private static ArrayList<Employee> employees = new ArrayList<>();
+    private static ArrayList<Customer> customers = new ArrayList<>();
 
     // -------------------------------------------------------------------------
 
@@ -38,5 +40,17 @@ public class Storage {
     }
 
     // -------------------------------------------------------------------------
+
+    public static ArrayList<Customer> getCustomers() {
+        return new ArrayList<>(customers);
+    }
+
+    public static void addCustomer(Customer customer) {
+        customers.add(customer);
+    }
+
+    public static void removeCustomer(Customer customer) {
+        customers.remove(customer);
+    }
 
 }
