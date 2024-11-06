@@ -14,8 +14,8 @@ import opgave01.storage.Storage;
 import java.util.ArrayList;
 
 public class AddCustomerWindow extends Stage {
-    ListView<Customer> customerListView = new ListView<>();
-    Company company;
+    private final ListView<Customer> customerListView = new ListView<>();
+    private Company company;
     private Label errorLabel;
 
 
